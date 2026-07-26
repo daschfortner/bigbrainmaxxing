@@ -4,7 +4,9 @@
   "description": "Implementations of several common data structures and algorithms, for interview prep and generally being a rockstar",
   "main": "src/main.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "clean": "rm -rf out",
+    "build": "tsc",
+    "test": "node --test out"
   },
   "repository": {
     "type": "git",

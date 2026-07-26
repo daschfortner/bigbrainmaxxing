@@ -3,17 +3,33 @@ export type LinkedList<T> = {
   insert: (item: T, index: number) => void
   remove: (index: number) => T
   toString: () => string
-  //find: (predicate: (item: T) => boolean) => T | undefined
-  //findIndex: (predicate: (item: T) => boolean) => number
+  findIndex: (predicate: (item: T) => boolean) => number
 }
 
-const SinglyLinkedList: <T>() => LinkedList<T> = <T>() => {
+export const SinglyLinkedList: <T>() => LinkedList<T> = <T>() => {
   type ListNode = {
     next?: ListNode
     data: T
   }
 
   let rootNode: ListNode | undefined = undefined
+
+  const findNodeBeforeIndex: (index: number) => ListNode = (index) => {
+    let currentNode: ListNode | undefined = rootNode
+    for (let i = 0; i < index - 1; i++) {
+      if (currentNode === undefined) {
+        throw new RangeError('invalid index')
+      }
+
+      currentNode = currentNode.next
+    }
+
+    if (currentNode === undefined) {
+      throw new RangeError('invalid index')
+    }
+
+    return currentNode
+  }
 
   return ({
     append: (item: T) => {
@@ -26,7 +42,6 @@ const SinglyLinkedList: <T>() => LinkedList<T> = <T>() => {
       
       let currentNode: ListNode | undefined = rootNode
       while (currentNode.next !== undefined) {
-        console.log('  > getting next node')
         currentNode = currentNode.next
       }
 
@@ -35,56 +50,74 @@ const SinglyLinkedList: <T>() => LinkedList<T> = <T>() => {
       }
     },
     insert: (item: T, index: number) => {
-      const newNode: ListNode = {
-        data: item
+      if (index === 0) {
+        const nextNode = rootNode
+        rootNode = {
+          data: item,
+          next: nextNode,
+        }
+
+        return
       }
 
-      let currentNode: ListNode | undefined = rootNode
-      let currentIndex: number = 0
-      while (currentIndex < index - 1) {
-        if (currentNode === undefined) {
+      const insertionPoint = findNodeBeforeIndex(index)
+
+      const insertNext = insertionPoint.next
+      insertionPoint.next = {
+        data: item,
+        next: insertNext
+      }
+    },
+    remove: (index: number) => {
+      if (index === 0) {
+        const currentRoot = rootNode
+
+        if (currentRoot === undefined) {
           throw new RangeError('invalid index')
+        }
+
+        rootNode = currentRoot.next
+        return currentRoot.data
+      }
+
+      const removalPoint = findNodeBeforeIndex(index)
+      const nodeToRemove = removalPoint.next
+
+      // if this node is null then the index was not valid because we are talking
+      // about an index off the end of the list
+      if (nodeToRemove === undefined) {
+        throw new RangeError('invalid index')
+      }
+
+      const newNext = nodeToRemove.next
+      removalPoint.next = newNext
+
+      return nodeToRemove.data
+    },
+    toString: () => {
+      let output = '['
+
+      let currentNode = rootNode
+      while(currentNode !== undefined) {
+        output += ` ${currentNode.data}`
+        currentNode = currentNode.next
+      }
+
+      return `${output} ]`
+    },
+    findIndex: (predicate: (item: T) => boolean) => {
+      let currentNode = rootNode
+      let currentIndex = 0
+      while (currentNode !== undefined) {
+        if (predicate(currentNode.data)) {
+          return currentIndex
         }
 
         currentNode = currentNode.next
         currentIndex++
       }
 
-      const insertNext = currentNode?.next
-      newNode.next = insertNext
-      // todo fix this
-      currentNode!.next = newNode
-    },
-    remove: (index: number) => {
-      return rootNode!.data
-    },
-    toString: () => {
-      let output = '[ '
-
-      let currentNode = rootNode
-      while(currentNode !== undefined) {
-        output += `${currentNode.data} `
-        currentNode = currentNode.next
-      }
-
-      return `${output} ]`
+      return -1
     }
   })
 }
-
-const list = SinglyLinkedList<number>()
-
-console.log(list.toString())
-
-console.log('  > adding 1 to list...')
-list.append(1)
-console.log(list.toString())
-console.log('  > adding 2 to list...')
-list.append(2)
-console.log(list.toString())
-console.log('  > adding 3 to list...')
-list.append(3)
-console.log(list.toString())
-console.log('  > adding 4 to list...')
-list.append(4)
-console.log(list.toString())
