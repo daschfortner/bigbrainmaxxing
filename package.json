@@ -1,0 +1,25 @@
+{
+  "name": "bigbrainmaxxing",
+  "version": "1.0.0",
+  "description": "Implementations of several common data structures and algorithms, for interview prep and generally being a rockstar",
+  "main": "src/main.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daschfortner/bigbrainmaxxing.git"
+  },
+  "author": "Daschel Fortner",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/daschfortner/bigbrainmaxxing/issues"
+  },
+  "homepage": "https://github.com/daschfortner/bigbrainmaxxing#readme",
+  "devDependencies": {
+    "@tsconfig/node20": "^20.1.9",
+    "@types/node": "^26.1.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^7.0.2"
+  }
+}
