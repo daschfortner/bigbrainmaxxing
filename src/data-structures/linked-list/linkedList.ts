@@ -121,3 +121,5 @@ export const SinglyLinkedList: <T>() => LinkedList<T> = <T>() => {
     }
   })
 }
+
+// TODO: Implement a doubly linked list
